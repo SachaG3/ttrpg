@@ -19,7 +19,7 @@ class Player extends Model
         'faction_id',
         'is_spy',
         'is_hero',
-        'force',
+        'strength',
         'dexterity',
         'intelligence',
         'wisdom',
