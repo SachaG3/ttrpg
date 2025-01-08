@@ -15,7 +15,7 @@
             justify-content: flex-end;
             align-items: center;
             width: 100vw;
-            height: 100vh;
+            height: 100dvh;
             background-image: url("/img/background2.jpg");
             background-size: 100% 100%;
             background-repeat: no-repeat;
