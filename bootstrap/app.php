@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsurePlayerIsAuthenticated;
+use App\Http\Middleware\HttpsProtocol;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(HttpsProtocol::class);
         $middleware->alias(['player.auth' => EnsurePlayerIsAuthenticated::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
