@@ -66,6 +66,7 @@ Class GameController extends Controller {
         $nextMission = $choice->next_mission_id;
 
         if (!$nextMission) {
+            $player->update(['is_finish' => true]);
             return redirect()->route('game.result')->with('success', 'You have completed all missions!');
         }
 
