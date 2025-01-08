@@ -45,7 +45,7 @@ class PlayerController extends Controller
             'dexterity' => 0,
             'intelligence' => 0,
             'wisdom' => 0,
-            'game_id' => $currentGame->id,
+            'game_id' => $currentGame->id??0,
         ]);
 
         session(['player_id' => $player->id]);
