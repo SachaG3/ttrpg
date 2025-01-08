@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FactionController;
 use App\Http\Controllers\GameController;
@@ -16,12 +17,21 @@ Route::get('/up', function () {
     return response()->json(['status' => 'up up up up']);
 });
 
-Route::get('/',[HomeController::class,'index']);
+Route::get('/',[HomeController::class,'index'])->name('home');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/import',[JsonImportController::class,'import'])->name('import');
+Route::middleware('admin')->group(function () {
+    Route::get('/import', [JsonImportController::class, 'import'])->name('import');
+    Route::get('/game/start', [GameController::class, 'start'])->name('game.start');
+    Route::get('/game/end', [GameController::class, 'end'])->name('game.end');
+    Route::get('/game/rendomize', [GameController::class, 'gameRandomise'])->name('game.rendomize');
+    Route::get('/admin/panel', [AdminController::class, 'panel'])->name('admin.panel');
+    Route::post('/admin/start-game', [AdminController::class, 'startGame'])->name('admin.startGame');
+    Route::post('/admin/stop-game', [AdminController::class, 'stopGame'])->name('admin.stopGame');
+    Route::post('/admin/create-heroes', [AdminController::class, 'createHeroes'])->name('admin.createHeroes');
+});
 
 Route::resources([
     'players' => PlayerController::class,
@@ -33,4 +43,6 @@ Route::resources([
 
 Route::middleware('player.auth')->group(function () {
     Route::get('/start',[GameController::class,'index'])->name('game.start');
+    Route::post('/next',[GameController::class,'next'])->name('game.next');
+    Route::get('/result',[GameController::class,'result'])->name('game.result');
 });

@@ -12,6 +12,7 @@ class Player extends Model
     // Colonnes mass-assignable
     protected $fillable = [
         'game_id',
+        'mission_id',
         'role',
         'firstname',
         'name',
@@ -22,6 +23,7 @@ class Player extends Model
         'dexterity',
         'intelligence',
         'wisdom',
+        'is_finish'
     ];
 
     /**

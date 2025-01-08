@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckAdmin;
 use App\Http\Middleware\EnsurePlayerIsAuthenticated;
 use App\Http\Middleware\HttpsProtocol;
 use Illuminate\Foundation\Application;
@@ -14,7 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(HttpsProtocol::class);
-        $middleware->alias(['player.auth' => EnsurePlayerIsAuthenticated::class]);
+        $middleware->alias([
+            'player.auth' => EnsurePlayerIsAuthenticated::class,
+            'admin' => CheckAdmin::class,
+        ]);
+
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
