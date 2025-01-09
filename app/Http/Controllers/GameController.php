@@ -189,6 +189,47 @@ Class GameController extends Controller {
         ]);
     }
 
+    public function checkRollStatus(Request $request)
+    {
+        $playerId = Player::find(session('player_id'));
+        $heroId = $playerId->hero_id;
+
+        // Trouver la partie en cours
+        $game = Game::whereNotNull('date_start')
+            ->whereNull('date_end')
+            ->first();
+
+        if (!$game) {
+            return response()->json(['completed' => false, 'error' => 'No active game found'], 404);
+        }
+
+        // Trouver le dernier Gamede associé à cette partie
+        $gameDe = GameDice::where('game_id', $game->id)
+            ->latest()
+            ->first();
+
+        if (!$gameDe) {
+            return response()->json(['completed' => false, 'error' => 'No dice roll request found'], 404);
+        }
+
+        // Vérifier si un lancer de dé a été effectué pour ce joueur et ce héros
+        $rollExists = RollDice::where('gamede_id', $gameDe->id)
+            ->where('player_id', $playerId)
+            ->where('hero_id', $heroId)
+            ->exists();
+
+        if ($rollExists) {
+            return response()->json(['completed' => false]);
+        }
+
+        // Si un lancer existe, retourner les informations du dé
+        return response()->json([
+            'completed' => true,
+            'dice_type' => "de".$gameDe->dice_type,
+        ]);
+    }
+
+
 
 
 

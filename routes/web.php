@@ -51,4 +51,6 @@ Route::middleware('player.auth')->group(function () {
     Route::get('/start',[GameController::class,'index'])->name('game.start');
     Route::post('/next',[GameController::class,'next'])->name('game.next');
     Route::get('/result',[GameController::class,'result'])->name('game.result');
+    Route::get('/game/check-roll-status', [GameController::class, 'checkRollStatus'])->name('game.checkRollStatus');
+
 });
