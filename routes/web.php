@@ -27,8 +27,8 @@ Route::get('/wait',[HomeController::class,'wait'])->name('wait');
 Route::get('/game/check-start', [GameController::class, 'checkStart'])->name('game.checkStart');
 
 Route::get('/de20',[DeController::class,'de20'])->name('de20');
-Route::get('/de6',[DeController::class,'de6'])->name('de20');
-Route::get('/de4',[DeController::class,'de4'])->name('de20');
+Route::get('/de6',[DeController::class,'de6'])->name('de6');
+Route::get('/de4',[DeController::class,'de4'])->name('de4');
 
 Route::middleware('admin')->group(function () {
     Route::get('/import', [JsonImportController::class, 'import'])->name('import');
