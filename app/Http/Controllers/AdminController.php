@@ -139,7 +139,7 @@ class AdminController extends Controller
         }
 
         // Assigner les joueurs aux héros
-        $players = Player::where('game_id', $game->id)->where('isHero', false)->get();
+        $players = Player::where('game_id', $game->id)->where('isHero', false)->where('role', '!=', 1)->get();
         $playersPerHero = ceil($players->count() / count($heroes));
         $playerGroups = $players->chunk($playersPerHero);
 
