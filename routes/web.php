@@ -32,7 +32,6 @@ Route::get('/de4',[DeController::class,'de4'])->name('de4');
 
 Route::middleware('admin')->group(function () {
     Route::get('/import', [JsonImportController::class, 'import'])->name('import');
-    Route::get('/game/start', [GameController::class, 'start'])->name('game.start');
     Route::get('/game/end', [GameController::class, 'end'])->name('game.end');
     Route::post('/admin/rendomize', [AdminController::class, 'gameRandomise'])->name('admin.rendomize');
     Route::get('/admin/panel', [AdminController::class, 'panel'])->name('admin.panel');
