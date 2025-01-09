@@ -3,5 +3,6 @@
 
 @section('content')
 
+    @include('component.inventory')
 
 @endsection

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Choice;
 use App\Models\Game;
+use App\Models\GameDice;
 use App\Models\Item;
 use App\Models\Mission;
 use App\Models\Player;
 use App\Models\PlayerInventory;
+use App\Models\RollDice;
 use Illuminate\Http\Request;
 
 Class GameController extends Controller {
@@ -111,57 +113,82 @@ Class GameController extends Controller {
         return redirect()->route('game.index')
             ->with('success', 'Game ended successfully.');
     }
-    public function gameRandomise()
+
+    public function checkStart()
     {
         $game = Game::whereNotNull('date_start')
             ->whereNull('date_end')
             ->first();
 
-
-        if (!$game) {
-            return redirect()->route('game.index')
-                ->with('error', 'No active game found.');
-        }
-
-        $missions = Mission::where('start_mission', true)->get(); // Récupérer toutes les missions de départ
-        $players = Player::where('game_id', $game->id)->get();
-
-        if ($missions->isEmpty()) {
-            return redirect()->route('game.index')
-                ->with('error', 'No missions available to assign.');
-        }
-
-        $unassignedPlayers = $players; // Liste initiale des joueurs sans mission
-        $assignedMissions = []; // Liste des missions déjà attribuées
-        while ($unassignedPlayers->isNotEmpty()) {
-            // Vérifier si toutes les missions ont été attribuées
-            if (count($assignedMissions) >= $missions->count()) {
-                // Réinitialiser la liste des missions déjà attribuées
-                $assignedMissions = [];
-            }
-
-            foreach ($unassignedPlayers as $key => $player) {
-                $availableMissions = $missions->whereNotIn('id', $assignedMissions);
-
-                if ($availableMissions->isEmpty()) {
-                    break; // Sortir de la boucle si aucune mission disponible
-                }
-
-                $mission = $availableMissions->random();
-
-                // Assigner la mission au joueur
-                $player->update(['mission_id' => $mission->id]);
-
-                $assignedMissions[] = $mission->id;
-
-                // Retirer le joueur de la liste des joueurs sans mission
-                unset($unassignedPlayers[$key]);
-            }
-        }
-
-        return redirect()->route('game.index')
-            ->with('success', 'Missions randomized successfully.');
+        return response()->json(['is_start' => $game ? $game->is_start : false]);
     }
+
+
+    public function submitRoll(Request $request)
+    {
+        $request->validate([
+            'gamede_id' => 'required|exists:game_dices,id',
+            'player_id' => 'required|exists:players,id',
+            'dice_result' => 'required|integer|min:1|max:20',
+        ]);
+
+        // Créer un nouveau lancer de dé
+        $roll = RollDice::create([
+            'game_dice_id' => $request->gamede_id,
+            'player_id' => $request->player_id,
+            'result' => $request->dice_result,
+        ]);
+
+        // Vérifier si tous les joueurs associés à ce héros ont lancé leurs dés
+        $gameDice = GameDice::find($request->gamede_id);
+        $hero = $gameDice->hero;
+
+        $associatedPlayers = Player::where('hero_id', $hero->id)->pluck('id');
+        $rolls = RollDice::where('game_dice_id', $request->gamede_id)
+            ->whereIn('player_id', $associatedPlayers)
+            ->get();
+
+        // Si tous les joueurs associés ont lancé leurs dés
+        if ($rolls->count() === $associatedPlayers->count()) {
+            // Extraire les résultats
+            $results = $rolls->pluck('result');
+
+            // Vérifier les cas critiques
+            $criticalFails = $results->filter(fn($r) => $r === 1);
+            $criticalSuccesses = $results->filter(fn($r) => $r === 20);
+
+            $finalResult = null;
+
+            if ($criticalFails->count() > 0 && $criticalSuccesses->count() > 0) {
+                // Si échec critique ET réussite critique, calculer la moyenne
+                $finalResult = round($results->average());
+            } elseif ($criticalSuccesses->count() > 0) {
+                // Si au moins une réussite critique
+                $finalResult = 20;
+            } elseif ($criticalFails->count() > 0) {
+                // Si au moins un échec critique
+                $finalResult = 1;
+            } else {
+                // Sinon, prendre la valeur maximale
+                $finalResult = $results->max();
+            }
+
+            // Mettre à jour le résultat dans GameDice
+            $gameDice->update(['dice_result' => $finalResult]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Dice roll submitted. Final result calculated.',
+                'final_result' => $finalResult,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Dice roll submitted. Waiting for other players.',
+        ]);
+    }
+
 
 
 

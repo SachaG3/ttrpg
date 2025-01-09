@@ -34,7 +34,6 @@ class PlayerController extends Controller
             return redirect()->back()->with('error', 'No active game found. Please start a game first.');
         }
 
-        // Créer le joueur et l'associer au jeu en cours
         $player = Player::create([
             'name' => $request->nickname,
             'faction_id' => null,
@@ -51,7 +50,7 @@ class PlayerController extends Controller
 
         session(['player_id' => $player->id]);
 
-        return redirect()->route('game.start')->with('success', 'Player created successfully and logged in.');
+        return redirect()->route('wait')->with('success', 'Player created successfully and logged in.');
     }
 
 

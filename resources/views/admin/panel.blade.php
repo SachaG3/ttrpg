@@ -39,6 +39,9 @@
                         </svg>
                         Créer des Héros
                     </button>
+                    <button id="melanger" class="btn btn-primary flex items-center">
+                        distribuer les missions
+                    </button>
                 </div>
             </div>
 
@@ -133,6 +136,18 @@
                 .then(data => showNotification(data.message, 'success'))
                 .catch(() => showNotification('Erreur lors du démarrage du jeu.', 'error'));
         });
+        document.getElementById('melanger').addEventListener('click', function () {
+            fetch('{{ route("admin.rendomize") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => showNotification(data.message, 'success'))
+                .catch(() => showNotification('Erreur lors du démarrage du jeu.', 'error'));
+        });
 
         document.getElementById('stop-game').addEventListener('click', function () {
             fetch('{{ route("admin.stopGame") }}', {
@@ -156,9 +171,19 @@
                 }
             })
                 .then(res => res.json())
-                .then(data => showNotification('Héros créés avec succès!', 'success'))
-                .catch(() => showNotification('Erreur lors de la création des héros.', 'error'));
+                .then(data => {
+                    if (data.success) {
+                        showNotification('Héros créés avec succès!', 'success');
+                        window.location.href = '{{ route("admin.panel.hero") }}';
+                    } else {
+                        showNotification(data.message || 'Erreur inconnue.', 'error');
+                    }
+                })
+                .catch(() => {
+                    showNotification('Erreur lors de la création des héros.', 'error');
+                });
         });
+
         function refreshPlayers() {
             fetch('{{ route("admin.panel") }}', {
                 headers: {

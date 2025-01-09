@@ -9,7 +9,7 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'date_start', 'date_end'];
+    protected $fillable = ['name', 'date_start', 'date_end','is_start',];
 
     public function players()
     {

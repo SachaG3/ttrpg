@@ -22,15 +22,21 @@ Route::get('/',[HomeController::class,'index'])->name('home');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/wait',[HomeController::class,'wait'])->name('wait');
+Route::get('/game/check-start', [GameController::class, 'checkStart'])->name('game.checkStart');
+
+
 Route::middleware('admin')->group(function () {
     Route::get('/import', [JsonImportController::class, 'import'])->name('import');
     Route::get('/game/start', [GameController::class, 'start'])->name('game.start');
     Route::get('/game/end', [GameController::class, 'end'])->name('game.end');
-    Route::get('/game/rendomize', [GameController::class, 'gameRandomise'])->name('game.rendomize');
+    Route::post('/admin/rendomize', [AdminController::class, 'gameRandomise'])->name('admin.rendomize');
     Route::get('/admin/panel', [AdminController::class, 'panel'])->name('admin.panel');
     Route::post('/admin/start-game', [AdminController::class, 'startGame'])->name('admin.startGame');
     Route::post('/admin/stop-game', [AdminController::class, 'stopGame'])->name('admin.stopGame');
     Route::post('/admin/create-heroes', [AdminController::class, 'createHeroes'])->name('admin.createHeroes');
+    Route::get('/admin/panel/hero', [AdminController::class, 'heroPanel'])->name('admin.panel.hero');
+    Route::post('/admin/game/request-roll', [AdminController::class, 'requestRoll'])->name('admin.gamede.requestRoll');
 });
 
 Route::resources([

@@ -18,12 +18,13 @@ class Player extends Model
         'name',
         'faction_id',
         'is_spy',
-        'is_hero',
+        'isHero',
         'strength',
         'dexterity',
         'intelligence',
         'wisdom',
-        'is_finish'
+        'is_finish',
+        'hero_id',
     ];
 
     /**

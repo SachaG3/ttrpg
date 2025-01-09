@@ -13,7 +13,7 @@ class JsonImportController extends Controller
     {
         set_time_limit(60);
 
-        $jsonPath = storage_path('app/stories.jsons');
+        $jsonPath = storage_path('app/stories.json');
         $jsonData = json_decode(file_get_contents($jsonPath), true);
 
         $missions = []; // Pour mapper les IDs des missions JSON aux IDs de la base de données
