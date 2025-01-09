@@ -3,7 +3,6 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\controller;
-use App\Http\Controllers\Decontroller;
 use App\Http\Controllers\DeeController;
 use App\Http\Controllers\FactionController;
 use App\Http\Controllers\GameController;
