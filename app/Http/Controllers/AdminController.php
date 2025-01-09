@@ -115,7 +115,11 @@ class AdminController extends Controller
 
         $heroes = [];
         foreach ($heroesData as $heroData) {
-            $players = Player::where('game_id', $game->id)->where('isHero', false)->get();
+
+            $players = Player::where('game_id', $game->id)
+                ->where('isHero', false)
+                ->where('role', '!=', 1)
+                ->get();
 
             // Calculer la moyenne de la statistique dominante
             $averageStat = $players->avg($heroData['stat']);
