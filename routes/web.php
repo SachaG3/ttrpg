@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\controller;
 use App\Http\Controllers\Decontroller;
+use App\Http\Controllers\DeeController;
 use App\Http\Controllers\FactionController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GroupController;
@@ -27,9 +28,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/wait',[HomeController::class,'wait'])->name('wait');
 Route::get('/game/check-start', [GameController::class, 'checkStart'])->name('game.checkStart');
 
-Route::get('/de20',[Decontroller::class,'de20'])->name('de20');
-Route::get('/de6',[Decontroller::class,'de6'])->name('de6');
-Route::get('/de4',[Decontroller::class,'de4'])->name('de4');
+Route::get('/de20',[DeeController::class,'de20'])->name('de20');
+Route::get('/de6',[DeeController::class,'de6'])->name('de6');
+Route::get('/de4',[DeeController::class,'de4'])->name('de4');
 
 Route::middleware('admin')->group(function () {
     Route::get('/import', [JsonImportController::class, 'import'])->name('import');
