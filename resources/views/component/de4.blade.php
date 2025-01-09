@@ -63,7 +63,7 @@
 </div>
 
 {{-- Inclusion de Three.js (ex. version 0.128.0) --}}
-
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 
 <script>
     // On renomme les variables pour éviter toute collision globale.

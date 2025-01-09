@@ -59,6 +59,7 @@
 </div>
 
 {{-- Inclusion de Three.js (version r128) --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
     // Sélections et variables "globales" pour ce composant

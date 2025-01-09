@@ -1,3 +1,7 @@
+@extends('layouts.app-main')
+@section('title', 'Game')
+
+@section('content')
 {{-- resources/views/component/de20.blade.php --}}
 <div class="de20-container">
     <style>
@@ -364,3 +368,4 @@
         return faceNumber;
     }
 </script>
+@endsection
