@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class DeController extends Controller
+class Decontroller extends Controller
 {
     public function de20()
     {
